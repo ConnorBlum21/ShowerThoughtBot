@@ -27,7 +27,7 @@ def generate_audio(content, output_file):
 
 
 
-def add_text_overlay(video_clip, text, duration, words_per_subtitle=5, fontsize=70, offset=-0.3):
+def add_text_overlay(video_clip, text, duration, words_per_subtitle=5, fontsize=40, offset=-0.3):
     words = text.split()  # Split the text into individual words
     num_words = len(words)
     num_subtitles = (num_words + words_per_subtitle - 1) // words_per_subtitle  # Calculate the number of subtitles
@@ -85,14 +85,14 @@ def add_text_overlay(video_clip, text, duration, words_per_subtitle=5, fontsize=
 
 
 
-def add_audio_to_video(video_path, tts_audio_path, music_audio_path, output_path, thought):
+def add_audio_to_video(video_path, tts_audio_path, output_path, thought):
     # Load video clip
     video_clip = VideoFileClip(video_path)
 
     # Load audio clips
     video_audio_clip = video_clip.audio
     audio_clip1 = AudioFileClip(tts_audio_path)
-    audio_clip2 = AudioFileClip(music_audio_path)
+    #audio_clip2 = AudioFileClip(music_audio_path)
 
     # Set the duration of the video and audio clips
     video_duration = video_clip.duration
@@ -102,13 +102,13 @@ def add_audio_to_video(video_path, tts_audio_path, music_audio_path, output_path
     video_clip = video_clip.subclip(0, min(video_duration, new_duration))
     video_audio_clip = video_audio_clip.subclip(0, min(video_duration, new_duration))
     audio_clip1 = audio_clip1.subclip(0, new_duration)
-    audio_clip2 = audio_clip2.subclip(0, new_duration)
+    #audio_clip2 = audio_clip2.subclip(0, new_duration)
 
     # Combine the audio clips
-    new_audio_clip = CompositeAudioClip([audio_clip1, audio_clip2])
+    #new_audio_clip = CompositeAudioClip([audio_clip1, audio_clip2])
 
     # Combine the existing audio and new audio
-    final_audio_clip = CompositeAudioClip([video_audio_clip, new_audio_clip])
+    final_audio_clip = CompositeAudioClip([video_audio_clip, audio_clip1])
 
     # Set the combined audio to the video clip
     video_clip = video_clip.set_audio(final_audio_clip)
@@ -122,12 +122,12 @@ def add_audio_to_video(video_path, tts_audio_path, music_audio_path, output_path
     # Close the clips
     video_clip.close()
     video_audio_clip.close()
-    new_audio_clip.close()
+    #new_audio_clip.close()
     final_audio_clip.close()
 
 
 # Path to the text file and output audio file
-def make_video(thought):
+def make_video(thought , location):
 
     output_audio = "sound.mp3"
 
@@ -137,8 +137,8 @@ def make_video(thought):
     # Paths to the input video, audio, and output video
     input_video = "base.mp4"
     input_audio = "sound.mp3"
-    output_video = "final.mp4"
-    input_music = "music.mp3"
+    output_video = location
+    #input_music = "music.mp3"
 
     # Call the function to add audio to the video
-    add_audio_to_video(input_video, input_audio, input_music, output_video, thought)
+    add_audio_to_video(input_video, input_audio, output_video, thought)
